@@ -1,14 +1,14 @@
-function isEmpty (opt) {
+function isEmpty(opt) {
   if (opt === 0) return false
   if (Array.isArray(opt) && opt.length === 0) return true
   return !opt
 }
 
-function not (fun) {
+function not(fun) {
   return (...params) => !fun(...params)
 }
 
-function includes (str, query) {
+function includes(str, query) {
   /* istanbul ignore else */
   if (str === undefined) str = 'undefined'
   if (str === null) str = 'null'
@@ -17,15 +17,15 @@ function includes (str, query) {
   return text.indexOf(query.trim()) !== -1
 }
 
-function filterOptions (options, search, label, customLabel) {
+function filterOptions(options, search, label, customLabel) {
   return options.filter(option => includes(customLabel(option, label), search))
 }
 
-function stripGroups (options) {
+function stripGroups(options) {
   return options.filter(option => !option.$isLabel)
 }
 
-function flattenOptions (values, label) {
+function flattenOptions(values, label) {
   return (options) =>
     options.reduce((prev, curr) => {
       /* istanbul ignore else */
@@ -40,7 +40,7 @@ function flattenOptions (values, label) {
     }, [])
 }
 
-function filterGroups (search, label, values, groupLabel, customLabel) {
+function filterGroups(search, label, values, groupLabel, customLabel) {
   return (groups) =>
     groups.map(group => {
       /* istanbul ignore else */
@@ -62,7 +62,7 @@ function filterGroups (search, label, values, groupLabel, customLabel) {
 const flow = (...fns) => x => fns.reduce((v, f) => f(v), x)
 
 export default {
-  data () {
+  data() {
     return {
       search: '',
       isOpen: false,
@@ -105,7 +105,7 @@ export default {
      */
     value: {
       type: null,
-      default () {
+      default() {
         return []
       }
     },
@@ -196,7 +196,7 @@ export default {
      */
     customLabel: {
       type: Function,
-      default (option, label) {
+      default(option, label) {
         if (isEmpty(option)) return ''
         return label ? option[label] : option
       }
@@ -294,7 +294,7 @@ export default {
     */
     blockKeys: {
       type: Array,
-      default () {
+      default() {
         return []
       }
     },
@@ -317,7 +317,7 @@ export default {
       default: false
     }
   },
-  mounted () {
+  mounted() {
     /* istanbul ignore else */
     if (!this.multiple && this.max) {
       console.warn('[Vue-Multiselect warn]: Max prop should not be used when prop Multiple equals false.')
@@ -331,12 +331,12 @@ export default {
     }
   },
   computed: {
-    internalValue () {
+    internalValue() {
       return this.value || this.value === 0
         ? Array.isArray(this.value) ? this.value : [this.value]
         : []
     },
-    filteredOptions () {
+    filteredOptions() {
       const search = this.search || ''
       const normalizedSearch = search.toLowerCase().trim()
 
@@ -366,18 +366,18 @@ export default {
 
       return options.slice(0, this.optionsLimit)
     },
-    valueKeys () {
+    valueKeys() {
       if (this.trackBy) {
         return this.internalValue.map(element => element[this.trackBy])
       } else {
         return this.internalValue
       }
     },
-    optionKeys () {
+    optionKeys() {
       const options = this.groupValues ? this.flatAndStrip(this.options) : this.options
       return options.map(element => this.customLabel(element, this.label).toString().toLowerCase())
     },
-    currentOptionLabel () {
+    currentOptionLabel() {
       return this.multiple
         ? this.searchable ? '' : this.placeholder
         : this.internalValue.length
@@ -386,14 +386,14 @@ export default {
     }
   },
   watch: {
-    internalValue () {
+    internalValue() {
       /* istanbul ignore else */
       if (this.resetAfter && this.internalValue.length) {
         this.search = ''
         this.$emit('input', this.multiple ? [] : null)
       }
     },
-    search () {
+    search() {
       this.$emit('search-change', this.search, this.id)
     }
   },
@@ -402,7 +402,7 @@ export default {
      * Returns the internalValue in a way it can be emited to the parent
      * @returns {Object||Array||String||Integer}
      */
-    getValue () {
+    getValue() {
       return this.multiple
         ? this.internalValue
         : this.internalValue.length === 0
@@ -414,7 +414,7 @@ export default {
      * @param  {Array}
      * @returns {Array} returns a filtered and flat options list
      */
-    filterAndFlat (options, search, label) {
+    filterAndFlat(options, search, label) {
       return flow(
         filterGroups(search, label, this.groupValues, this.groupLabel, this.customLabel),
         flattenOptions(this.groupValues, this.groupLabel)
@@ -425,7 +425,7 @@ export default {
      * @param  {Array}
      * @returns {Array} returns a flat options list without group labels
      */
-    flatAndStrip (options) {
+    flatAndStrip(options) {
       return flow(
         flattenOptions(this.groupValues, this.groupLabel),
         stripGroups
@@ -435,8 +435,13 @@ export default {
      * Updates the search value
      * @param  {String}
      */
-    updateSearch (query) {
-      this.search = query
+    updateSearch(query) {
+      if (query[query.length] === "#") {
+        this.$emit('tag', this.search, this.id)
+        query = ""
+      }
+      else
+        this.search = query
     },
     /**
      * Finds out if the given query is already present
@@ -444,7 +449,7 @@ export default {
      * @param  {String}
      * @returns {Boolean} returns true if element is available
      */
-    isExistingOption (query) {
+    isExistingOption(query) {
       return !this.options
         ? false
         : this.optionKeys.indexOf(query) > -1
@@ -455,7 +460,7 @@ export default {
      * @param  {Object||String||Integer} option passed element to check
      * @returns {Boolean} returns true if element is selected
      */
-    isSelected (option) {
+    isSelected(option) {
       const opt = this.trackBy
         ? option[this.trackBy]
         : option
@@ -466,7 +471,7 @@ export default {
      * @param  {Object||String||Integer} option passed element to check
      * @returns {Boolean} returns true if element is disabled
      */
-    isOptionDisabled (option) {
+    isOptionDisabled(option) {
       return !!option.$isDisabled
     },
     /**
@@ -477,7 +482,7 @@ export default {
      * @param  {Object||String||Integer} Passed option
      * @returns {Object||String}
      */
-    getOptionLabel (option) {
+    getOptionLabel(option) {
       if (isEmpty(option)) return ''
       /* istanbul ignore else */
       if (option.isTag) return option.label
@@ -497,7 +502,7 @@ export default {
      * @param  {Object||String||Integer} option to select/deselect
      * @param  {Boolean} block removing
      */
-    select (option, key) {
+    select(option, key) {
       /* istanbul ignore else */
       if (option.$isLabel && this.groupSelect) {
         this.selectGroup(option)
@@ -514,8 +519,6 @@ export default {
       if (key === 'Tab' && !this.pointerDirty) return
       if (option.isTag) {
         this.$emit('tag', option.label, this.id)
-        console.log("opt"+option.label)
-        console.log('id'+this.id)
         this.search = ''
         if (this.closeOnSelect && !this.multiple) this.deactivate()
       } else {
@@ -546,7 +549,7 @@ export default {
      *
      * @param  {Object||String||Integer} group to select/deselect
      */
-    selectGroup (selectedGroup) {
+    selectGroup(selectedGroup) {
       const group = this.options.find(option => {
         return option[this.groupLabel] === selectedGroup.$groupLabel
       })
@@ -577,7 +580,7 @@ export default {
      *
      * @param {Object} group to validated selected values against
      */
-    wholeGroupSelected (group) {
+    wholeGroupSelected(group) {
       return group[this.groupValues].every(option => this.isSelected(option) || this.isOptionDisabled(option)
       )
     },
@@ -586,7 +589,7 @@ export default {
      *
      * @param {Object} group to check for disabled values
      */
-    wholeGroupDisabled (group) {
+    wholeGroupDisabled(group) {
       return group[this.groupValues].every(this.isOptionDisabled)
     },
     /**
@@ -597,7 +600,7 @@ export default {
      * @param  {type} option description
      * @returns {type}        description
      */
-    removeElement (option, shouldClose = true) {
+    removeElement(option, shouldClose = true) {
       /* istanbul ignore else */
       if (this.disabled) return
       /* istanbul ignore else */
@@ -629,7 +632,7 @@ export default {
      *
      * @fires this#removeElement
      */
-    removeLastElement () {
+    removeLastElement() {
       /* istanbul ignore else */
       if (this.blockKeys.indexOf('Delete') !== -1) return
       /* istanbul ignore else */
@@ -641,7 +644,7 @@ export default {
      * Opens the multiselect’s dropdown.
      * Sets this.isOpen to TRUE
      */
-    activate () {
+    activate() {
       /* istanbul ignore else */
       if (this.isOpen || this.disabled) return
 
@@ -665,7 +668,7 @@ export default {
      * Closes the multiselect’s dropdown.
      * Sets this.isOpen to FALSE
      */
-    deactivate () {
+    deactivate() {
       /* istanbul ignore else */
       if (!this.isOpen) return
 
@@ -686,7 +689,7 @@ export default {
      * @fires this#activate || this#deactivate
      * @property {Boolean} isOpen indicates if dropdown is open
      */
-    toggle () {
+    toggle() {
       this.isOpen
         ? this.deactivate()
         : this.activate()
@@ -695,7 +698,7 @@ export default {
      * Updates the hasEnoughSpace variable used for
      * detecting where to expand the dropdown
      */
-    adjustPosition () {
+    adjustPosition() {
       if (typeof window === 'undefined') return
 
       const spaceAbove = this.$el.getBoundingClientRect().top
