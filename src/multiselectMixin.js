@@ -514,6 +514,8 @@ export default {
       if (key === 'Tab' && !this.pointerDirty) return
       if (option.isTag) {
         this.$emit('tag', option.label, this.id)
+        console.log("opt"+option.label)
+        console.log('id'+this.id)
         this.search = ''
         if (this.closeOnSelect && !this.multiple) this.deactivate()
       } else {

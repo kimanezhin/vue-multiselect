@@ -60,14 +60,11 @@ export default {
     },
     addPointerElement ({ key } = 'Enter') {
       /* istanbul ignore else */
-      console.log("1"+this.pointer)
-      console.log("2"+this.filteredOptions[this.pointer])
-      console.log('3'+key)
       if (this.filteredOptions.length > 0) {
         this.select(this.filteredOptions[this.pointer], key)
       }
       this.pointerReset()
-    },
+    },       
     pointerForward () {
       /* istanbul ignore else */
       if (this.pointer < this.filteredOptions.length - 1) {
