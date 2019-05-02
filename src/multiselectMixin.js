@@ -436,9 +436,9 @@ export default {
      * @param  {String}
      */
     updateSearch(query) {
-      this.$store.dispatch('GET_COMPLETION',query).then(() =>{
-        this.$eventHub.$emit('update-search',this.$store.getters.GET_VALUES);
-      })
+      // this.$store.dispatch('GET_COMPLETION',query).then(() =>{
+        this.$eventHub.$emit('update-search', query);
+      // })
       // if (query[query.length] === "#") {
         // this.$emit('tag', this.search, this.id)
         // query = ""
@@ -651,10 +651,10 @@ export default {
       /* istanbul ignore else */
       if (this.isOpen || this.disabled) return
 
-      if(!this.search)
-        this.$store.dispatch('GET_COMPLETION').then(() =>{
-          this.$eventHub.$emit('update-search',this.$store.getters.GET_VALUES);
-        })
+      // if(!this.search)
+        // this.$store.dispatch('GET_COMPLETION').then(() =>{
+          this.$eventHub.$emit('update-search',this.search);
+        // })
       this.adjustPosition()
       /* istanbul ignore else  */
       if (this.groupValues && this.pointer === 0 && this.filteredOptions.length) {
