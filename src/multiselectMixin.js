@@ -436,6 +436,7 @@ export default {
      * @param  {String}
      */
     updateSearch(query) {
+      console.log('aaaaas')
       if (query[query.length] === "#") {
         this.$emit('tag', this.search, this.id)
         query = ""
