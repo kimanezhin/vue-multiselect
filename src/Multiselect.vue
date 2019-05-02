@@ -1,9 +1,9 @@
 <template>
   <div
-    :tabindex="searchable ? -1 : tabindex"
+    :tabindex="!searchable ? -1 : tabindex"
     :class="{ 'multiselect--active': isOpen, 'multiselect--disabled': disabled, 'multiselect--above': isAbove }"
     @focus="activate()"
-    @blur="searchable ? false : deactivate()"
+    @blur="!searchable ? false : deactivate()"
     @keydown.self.down.prevent="pointerForward()"
     @keydown.self.up.prevent="pointerBackward()"
     @keypress.enter.tab.stop.self="addPointerElement($event)"
@@ -292,12 +292,12 @@ export default {
     isSingleLabelVisible () {
       return (
         (this.singleValue || this.singleValue === 0) &&
-        (!this.isOpen || !this.searchable) &&
+        (!this.isOpen|| this.searchable) &&
         !this.visibleValues.length
       )
     },
     isPlaceholderVisible () {
-      return !this.internalValue.length && (!this.isOpen)
+      return !this.internalValue.length && (this.searchable || !this.isOpen)
     },
     visibleValues () {
       return this.multiple ? this.internalValue.slice(0, this.limit) : []
@@ -322,7 +322,7 @@ export default {
     },
     inputStyle () {
       if (
-        this.searchable ||
+        !this.searchable ||
         (this.multiple && this.value && this.value.length)
       ) {
         // Hide input by setting the width to 0 allowing it to receive focus
@@ -350,7 +350,7 @@ export default {
     },
     showSearchInput () {
       return (
-        this.searchable &&
+        !this.searchable &&
         (this.hasSingleSelectedSlot &&
         (this.visibleSingleValue || this.visibleSingleValue === 0)
           ? this.isOpen
