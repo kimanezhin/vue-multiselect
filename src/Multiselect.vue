@@ -54,7 +54,7 @@
           :value="search"
           :disabled="disabled"
           :tabindex="tabindex"
-          @input="updateSearch($event.target.value)"
+         
           @focus.prevent="activate()"
           @blur.prevent="deactivate()"
           @keyup.esc="deactivate()"
