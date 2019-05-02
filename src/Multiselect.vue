@@ -297,7 +297,7 @@ export default {
       )
     },
     isPlaceholderVisible () {
-      return !this.internalValue.length && (!this.searchable || !this.isOpen)
+      return !this.internalValue.length && (!this.isOpen)
     },
     visibleValues () {
       return this.multiple ? this.internalValue.slice(0, this.limit) : []
