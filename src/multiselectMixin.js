@@ -436,13 +436,15 @@ export default {
      * @param  {String}
      */
     updateSearch(query) {
-      console.log('aaaaas')
-      if (query[query.length] === "#") {
-        this.$emit('tag', this.search, this.id)
-        query = ""
-      }
-      else
-        this.search = query
+      this.$store.dispatch('GET_COMPLETION',query).then(() =>{
+        this.$eventHub.$emit('update-search',this.$store.getters.GET_VALUES);
+      })
+      // if (query[query.length] === "#") {
+        // this.$emit('tag', this.search, this.id)
+        // query = ""
+      // }
+      // else
+        // this.search = query
     },
     /**
      * Finds out if the given query is already present
@@ -649,6 +651,10 @@ export default {
       /* istanbul ignore else */
       if (this.isOpen || this.disabled) return
 
+      if(!this.search)
+        this.$eventHub.$emit('GET_COMPLETION').then(() =>{
+          this.$eventHub.$emit('update-search',this.$store.getters.GET_VALUES);
+        })
       this.adjustPosition()
       /* istanbul ignore else  */
       if (this.groupValues && this.pointer === 0 && this.filteredOptions.length) {
