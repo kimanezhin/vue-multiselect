@@ -18,7 +18,8 @@ function includes(str, query) {
 }
 
 function filterOptions(options, search, label, customLabel) {
-  return options.filter(option => includes(customLabel(option, label), search))
+  return options;
+  // return options.filter(option => includes(customLabel(option, label), search))
 }
 
 function stripGroups(options) {
@@ -342,7 +343,8 @@ export default {
 
       let options = this.options.concat()
 
-      /* istanbul ignore else */
+      /*
+     
       if (this.internalSearch) {
         options = this.groupValues
           ? this.filterAndFlat(options, normalizedSearch, this.label)
@@ -350,7 +352,7 @@ export default {
       } else {
         options = this.groupValues ? flattenOptions(this.groupValues, this.groupLabel)(options) : options
       }
-
+*/
       options = this.hideSelected
         ? options.filter(not(this.isSelected))
         : options
@@ -374,8 +376,9 @@ export default {
       }
     },
     optionKeys() {
-      const options = this.groupValues ? this.flatAndStrip(this.options) : this.options
-      return options.map(element => this.customLabel(element, this.label).toString().toLowerCase())
+      return options;
+      // const options = this.groupValues ? this.flatAndStrip(this.options) : this.options
+      // return options.map(element => this.customLabel(element, this.label).toString().toLowerCase())
     },
     currentOptionLabel() {
       return this.multiple
