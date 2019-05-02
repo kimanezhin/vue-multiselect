@@ -44,7 +44,7 @@
         </transition>
         <input
           ref="search"
-          v-if="searchable"
+          v-if="!searchable"
           :name="name"
           :id="id"
           type="text"
