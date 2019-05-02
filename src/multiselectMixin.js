@@ -652,7 +652,7 @@ export default {
       if (this.isOpen || this.disabled) return
 
       if(!this.search)
-        this.$eventHub.$emit('GET_COMPLETION').then(() =>{
+        this.$store.dispatch('GET_COMPLETION').then(() =>{
           this.$eventHub.$emit('update-search',this.$store.getters.GET_VALUES);
         })
       this.adjustPosition()
