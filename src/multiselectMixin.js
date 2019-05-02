@@ -444,7 +444,7 @@ export default {
         // query = ""
       // }
       // else
-        // this.search = query
+        this.search = query
     },
     /**
      * Finds out if the given query is already present
