@@ -415,10 +415,12 @@ export default {
      * @returns {Array} returns a filtered and flat options list
      */
     filterAndFlat(options, search, label) {
-      return flow(
-        filterGroups(search, label, this.groupValues, this.groupLabel, this.customLabel),
-        flattenOptions(this.groupValues, this.groupLabel)
-      )(options)
+
+      return options
+      //return flow(
+        //filterGroups(search, label, this.groupValues, this.groupLabel, this.customLabel),
+        //flattenOptions(this.groupValues, this.groupLabel)
+      //)(options)
     },
     /**
      * Flattens and then strips the group labels from the options list
