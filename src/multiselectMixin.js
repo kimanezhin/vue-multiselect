@@ -18,9 +18,79 @@ function includes(str, query) {
 }
 
 function filterOptions(options, search, label, customLabel) {
-  return options;
-  // return options.filter(option => includes(customLabel(option, label), search))
+  // return options;
+  return options.filter(option => includes(customLabel(option, label), search))
 }
+
+let completions = ""
+
+function getAllCompletions() {
+  if (completions)
+    return completions;
+  // 1. Создаём новый объект XMLHttpRequest
+  var xhr = new XMLHttpRequest();
+
+  // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
+  xhr.open('GET', 'https://valera-denis.herokuapp.com/tags/completions', false);
+
+  // 3. Отсылаем запрос
+  xhr.send();
+
+  // 4. Если код ответа сервера не 200, то это ошибка
+  if (xhr.status != 200) {
+    // обработать ошибку
+    console.log(xhr.status + ': ' + xhr.statusText); // пример вывода: 404: Not Found
+  } else {
+    // вывести результат
+    console.log(xhr)
+    completions = xhr.responseText;
+    return (xhr.responseText); // responseText -- текст ответа.
+  }
+}
+function tagCompletion(payload) {
+
+  let tree = payload[0] || JSON.parse(getAllCompletions());
+  let word = payload[1]
+  if (word === "") {
+    let val = getValues(tree.subtree)
+
+    return (transformTags(val));
+  }
+  let character = word[0];
+
+  if (!tree.subtree[character]) {
+    return [];
+  }
+  else {
+    return tagCompletion([tree.subtree[character], _.drop(word.split('')).join('')])
+
+  }
+}
+
+function getValues(tree) {
+  let out = []
+  for (let i of Object.entries(tree)) {
+    if (i[1] && i[1].value)
+      out.push(i[1].value)
+
+    if (i[1])
+      out.push(getValues(i[1].subtree))
+    else
+      out.push(getValues(i.subtree))
+  }
+  return out.flat(out.length);
+}
+
+function transformTags(array) {
+  array = array.map(x => x = {
+    name: x,
+    code: x,
+  })
+  return array;
+}
+
+
+
 
 function stripGroups(options) {
   return options.filter(option => !option.$isLabel)
@@ -342,9 +412,9 @@ export default {
       const normalizedSearch = search.toLowerCase().trim()
 
       let options = this.options.concat()
+      options = tagCompletion([null, search])
+      return options;
 
-      /*
-     
       if (this.internalSearch) {
         options = this.groupValues
           ? this.filterAndFlat(options, normalizedSearch, this.label)
@@ -352,7 +422,7 @@ export default {
       } else {
         options = this.groupValues ? flattenOptions(this.groupValues, this.groupLabel)(options) : options
       }
-*/
+
       options = this.hideSelected
         ? options.filter(not(this.isSelected))
         : options
@@ -366,7 +436,7 @@ export default {
         }
       }
 
-      return options.slice(0, this.optionsLimit)
+      // return options.slice(0, this.optionsLimit)
     },
     valueKeys() {
       if (this.trackBy) {
@@ -376,9 +446,9 @@ export default {
       }
     },
     optionKeys() {
-      return options;
-      // const options = this.groupValues ? this.flatAndStrip(this.options) : this.options
-      // return options.map(element => this.customLabel(element, this.label).toString().toLowerCase())
+      // return options;
+      const options = this.groupValues ? this.flatAndStrip(this.options) : this.options
+      return options.map(element => this.customLabel(element, this.label).toString().toLowerCase())
     },
     currentOptionLabel() {
       return this.multiple
@@ -397,6 +467,7 @@ export default {
       }
     },
     search() {
+
       this.$emit('search-change', this.search, this.id)
     }
   },
@@ -419,11 +490,11 @@ export default {
      */
     filterAndFlat(options, search, label) {
 
-      return options
-      //return flow(
-        //filterGroups(search, label, this.groupValues, this.groupLabel, this.customLabel),
-        //flattenOptions(this.groupValues, this.groupLabel)
-      //)(options)
+      // return options
+      return flow(
+        filterGroups(search, label, this.groupValues, this.groupLabel, this.customLabel),
+        flattenOptions(this.groupValues, this.groupLabel)
+      )(options)
     },
     /**
      * Flattens and then strips the group labels from the options list
@@ -442,14 +513,14 @@ export default {
      */
     updateSearch(query) {
       // this.$store.dispatch('GET_COMPLETION',query).then(() =>{
-        this.$eventHub.$emit('update-search', query);
+      this.$eventHub.$emit('update-search', query);
       // })
       // if (query[query.length] === "#") {
-        // this.$emit('tag', this.search, this.id)
-        // query = ""
+      // this.$emit('tag', this.search, this.id)
+      // query = ""
       // }
       // else
-        this.search = query
+      this.search = query
     },
     /**
      * Finds out if the given query is already present
@@ -657,9 +728,9 @@ export default {
       if (this.isOpen || this.disabled) return
 
       // if(!this.search)
-        // this.$store.dispatch('GET_COMPLETION').then(() =>{
-          this.$eventHub.$emit('update-search',this.search);
-        // })
+      // this.$store.dispatch('GET_COMPLETION').then(() =>{
+      this.$eventHub.$emit('update-search', this.search);
+      // })
       this.adjustPosition()
       /* istanbul ignore else  */
       if (this.groupValues && this.pointer === 0 && this.filteredOptions.length) {
