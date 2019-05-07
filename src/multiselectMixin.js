@@ -413,6 +413,14 @@ export default {
 
       let options = this.options.concat()
       options = tagCompletion([null, search])
+          /* istanbul ignore else */
+          if (this.taggable && normalizedSearch.length && !this.isExistingOption(normalizedSearch)) {
+            if (this.tagPosition === 'bottom') {
+              options.push({ isTag: true, label: search })
+            } else {
+              options.unshift({ isTag: true, label: search })
+            }
+          }
       return options;
 
       if (this.internalSearch) {
@@ -427,14 +435,7 @@ export default {
         ? options.filter(not(this.isSelected))
         : options
 
-      /* istanbul ignore else */
-      if (this.taggable && normalizedSearch.length && !this.isExistingOption(normalizedSearch)) {
-        if (this.tagPosition === 'bottom') {
-          options.push({ isTag: true, label: search })
-        } else {
-          options.unshift({ isTag: true, label: search })
-        }
-      }
+  
 
       // return options.slice(0, this.optionsLimit)
     },
