@@ -18,6 +18,10 @@ export default {
     optionHeight: {
       type: Number,
       default: 40
+    },
+    isSpaceAllowed:{
+      type: Boolean,
+      default:false
     }
   },
   computed: {
@@ -59,6 +63,9 @@ export default {
       ] : 'multiselect__option--disabled'
     },
     addPointerElement ({ key } = 'Enter') {
+      console.log(this.isSpaceAllowed)
+      if(this.isSpaceAllowed)
+      return;
       /* istanbul ignore else */
       if (this.filteredOptions.length > 0) {
         this.select(this.filteredOptions[this.pointer], key)

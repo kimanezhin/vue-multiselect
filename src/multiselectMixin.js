@@ -424,13 +424,6 @@ export default {
               options.unshift({ isTag: true, label: search })
             }
           }
-     
-
-      if (this.internalSearch) {
-        options = this.groupValues
-          ? this.filterAndFlat(options, normalizedSearch, this.label)
-          : filterOptions(options, normalizedSearch, this.label, this.customLabel)
-      }
       return options;
       options = this.hideSelected
         ? options.filter(not(this.isSelected))

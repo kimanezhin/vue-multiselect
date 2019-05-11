@@ -26,27 +26,40 @@ div
 </template>
 
 <script>
-import Multiselect from 'vue-multiselect'
+import Multiselect from "vue-multiselect";
 
 export default {
   components: {
     Multiselect
   },
-  data () {
+  data() {
     return {
       value: [],
       options: [
-        { name: 'Vue.js', language: 'JavaScript' },
-        { name: 'Adonis', language: 'JavaScript' },
-        { name: 'Rails', language: 'Ruby' },
-        { name: 'Sinatra', language: 'Ruby' },
-        { name: 'Laravel', language: 'PHP' },
-        { name: 'Phoenix', language: 'Elixir' }
+        { name: "Vue.js", language: "JavaScript" },
+        { name: "Adonis", language: "JavaScript" },
+        { name: "Rails", language: "Ruby" },
+        { name: "Sinatra", language: "Ruby" },
+        { name: "Laravel", language: "PHP" },
+        { name: "Phoenix", language: "Elixir" }
       ]
-    }
+    };
   }
-}
+};
 </script>
+
+<style>
+.custom__tag {
+  display: inline-block;
+  padding: 3px 12px;
+  background: #d2d7ff;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
+
 
 <style lang="sass">
 .custom__tag

@@ -60,7 +60,7 @@
           @keyup.esc="deactivate()"
           @keydown.down.prevent="pointerForward()"
           @keydown.up.prevent="pointerBackward()"
-          @keypress.space.prevent.stop.self="addPointerElement($event)"
+          @keypress.space.stop.self="addPointerElement($event)"
           @keypress.enter.prevent.stop.self="addPointerElement($event)"
           @keydown.delete.stop="removeLastElement()"
           class="multiselect__input"/>
@@ -128,7 +128,7 @@
             </template>
             <li v-show="showNoResults && (filteredOptions.length === 0 && search && !loading)">
               <span class="multiselect__option">
-                <slot name="noResult">No elements found. Consider changing the search query.</slot>
+                <slot name="noResult">No elements found. </slot>
               </span>
             </li>
             <li v-show="showNoOptions && (options.length === 0 && !search && !loading)">
